@@ -6,7 +6,7 @@ import Display from './components/Display';
 
 const initialState = {
   displayValue: '0',
-  cleadDisplay: false,
+  clearDisplay: false,
   operation: null,
   values: [0, 0],
   current: 0,
@@ -16,18 +16,18 @@ export default class App extends Component {
   state = { ...initialState };
 
   addDig = (n) => {
-    if (n === '.' && this.state.displayValue.includes('.')) {
+    const clearDisplay =
+      this.state.displayValue === '0' || this.state.clearDisplay;
+
+    if (n === '.' && !clearDisplay && this.state.displayValue.includes('.')) {
       return;
     }
 
-    const cleadDisplay =
-      this.state.displayValue === '0' || this.state.cleadDisplay;
-
-    const currentValue = cleadDisplay ? '' : this.state.displayValue;
+    const currentValue = clearDisplay ? '' : this.state.displayValue;
 
     const displayValue = currentValue + n;
 
-    this.setState({ displayValue, cleadDisplay: false });
+    this.setState({ displayValue, clearDisplay: false });
 
     if (n !== '.') {
       const newValue = parseFloat(displayValue);
@@ -43,7 +43,7 @@ export default class App extends Component {
 
   setOperation = (operation) => {
     if (this.state.current === 0) {
-      this.setState({ operation, current: 1, cleadDisplay: true });
+      this.setState({ operation, current: 1, clearDisplay: true });
     } else {
       const equals = operation === '=';
       const values = [...this.state.values];
@@ -59,8 +59,8 @@ export default class App extends Component {
         displayValue: `${values[0]}`,
         operation: equals ? null : operation,
         current: equals ? 0 : 1,
-        // cleadDisplay: !equals,
-        cleadDisplay: equals,
+        // clearDisplay: !equals,
+        clearDisplay: equals,
         values,
       });
     }
